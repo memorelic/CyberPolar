@@ -1,0 +1,29 @@
+# Destination
+
+## Develop Environment
+gcc 9.1 above
+cmake 3.15 above
+
+## Directory
+bin   -- 二进制可执行文件
+build -- 中间文件路径
+cmake -- cmake函数文件夹
+lib   -- 库输出路径
+src   -- 源代码文件夹
+tests -- 测试代码路径
+
+## Logger(日志系统)
+1. 
+    Logger(定义日志类别)
+      |
+      |----Formatter(日志格式)
+      |
+    Appender(日志输出地)
+
+## Coroutine Fiber Library
+
+## Socket Library
+
+## Http Protocol
+
+## Distributed Protocol
