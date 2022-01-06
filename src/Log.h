@@ -5,6 +5,8 @@
 #include <memory>
 #include <cstdint>
 #include <list>
+#include <fstream>
+#include <iostream>
 
 
 namespace cyberpolar
@@ -63,9 +65,12 @@ namespace cyberpolar
         using ptr = std::shared_ptr<LogAppender>;
         virtual ~LogAppender();
 
-        void log(LogLevel::Level level, LogEvent::ptr event);
-    private:
+        virtual void log(LogLevel::Level level, LogEvent::ptr event) = 0;
+        void setFormatter(LogFormatter::ptr value);
+        LogFormatter::ptr getFormatter() const;
+    protected:
         LogLevel::Level m_level;
+        LogFormatter::ptr m_formatter;
     };
 
     // 日志器
@@ -100,13 +105,24 @@ namespace cyberpolar
     // 输出到控制台
     class StdoutLogAppender : public LogAppender
     {
+    public:
+        using ptr = std::shared_ptr<StdoutLogAppender>;
 
+        virtual void log(LogLevel::Level level, LogEvent::ptr event) override;
     };
 
     // 输出到文件
     class FileLogAppender : public LogAppender
     {
+    public:
+        using ptr = std::shared_ptr<FileLogAppender>;
+        FileLogAppender(const std::string& filename);
+        virtual void log(LogLevel::Level level, LogEvent::ptr event) override;
 
+        bool reopen();
+    private:
+        std::string m_filename;
+        std::ofstream m_filestream;
     };
 }
 
