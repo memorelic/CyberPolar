@@ -7,6 +7,8 @@
 #include <list>
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include <sstream>
 
 
 namespace cyberpolar
@@ -17,12 +19,15 @@ namespace cyberpolar
     public:
         enum Level
         {
+            UNKNOW = 0,
             DEBUG = 1,
             INFO  = 2,
             WARN  = 3,
             ERROR = 4,
             FATAL = 5
         };
+
+        static const char* ToString(LogLevel::Level level); 
     };
 
     // 日志事件
@@ -30,6 +35,14 @@ namespace cyberpolar
     {
     public:
         using ptr = std::shared_ptr<LogEvent>;
+
+        const char* getFile() const {return m_file;}
+        int32_t getLine() const {return m_line;}
+        uint32_t getElapse() const {return m_elapse;}
+        uint32_t getThreadId() const {return m_threadId;}
+        uint32_t getFibreId() const {return m_fiberId;}
+        uint64_t getTime() const {return m_time;}
+        const std::string getContent() const {return m_content;}
     private:
         // 文件名
         const char* m_file{nullptr};
@@ -52,10 +65,24 @@ namespace cyberpolar
     {
     public:
         using ptr = std::shared_ptr<LogFormatter>;
+        LogFormatter(const std::string& pattern);
 
-        std::string format(LogEvent::ptr event);
+
+        std::string format(LogLevel::Level level, LogEvent::ptr event);
+    public:
+        class FormatItem
+        {
+        public:
+            using ptr = std::shared_ptr<FormatItem>;
+            virtual ~FormatItem();
+
+            virtual void format(std::ostream& os, LogLevel::Level level, LogEvent::ptr event) = 0;
+        };
+
+        void init();
     private:
-
+        std::string m_pattern;
+        std::vector<FormatItem::ptr> m_items;
     };
 
     // 日志输出地
