@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <tuple>
 
 
 namespace cyberpolar
@@ -40,7 +41,7 @@ namespace cyberpolar
         int32_t getLine() const {return m_line;}
         uint32_t getElapse() const {return m_elapse;}
         uint32_t getThreadId() const {return m_threadId;}
-        uint32_t getFibreId() const {return m_fiberId;}
+        uint32_t getFiberId() const {return m_fiberId;}
         uint64_t getTime() const {return m_time;}
         const std::string getContent() const {return m_content;}
     private:
@@ -68,15 +69,16 @@ namespace cyberpolar
         LogFormatter(const std::string& pattern);
 
 
-        std::string format(LogLevel::Level level, LogEvent::ptr event);
+        std::string format(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event);
     public:
         class FormatItem
         {
         public:
+            FormatItem(const std::string& fmt = "") {};
             using ptr = std::shared_ptr<FormatItem>;
             virtual ~FormatItem();
 
-            virtual void format(std::ostream& os, LogLevel::Level level, LogEvent::ptr event) = 0;
+            virtual void format(std::ostream& os, std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
         };
 
         void init();
@@ -92,7 +94,7 @@ namespace cyberpolar
         using ptr = std::shared_ptr<LogAppender>;
         virtual ~LogAppender();
 
-        virtual void log(LogLevel::Level level, LogEvent::ptr event) = 0;
+        virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) = 0;
         void setFormatter(LogFormatter::ptr value);
         LogFormatter::ptr getFormatter() const;
     protected:
@@ -101,7 +103,7 @@ namespace cyberpolar
     };
 
     // 日志器
-    class Logger
+    class Logger : public std::enable_shared_from_this<Logger>
     {
     public:
         using ptr = std::shared_ptr<Logger>;
@@ -121,6 +123,8 @@ namespace cyberpolar
 
         LogLevel::Level getLevel() const;
         void setLevel(LogLevel::Level value);
+
+        const std::string& getName() const;
     private:
         // 日志器名称
         std::string m_name;
@@ -135,7 +139,7 @@ namespace cyberpolar
     public:
         using ptr = std::shared_ptr<StdoutLogAppender>;
 
-        virtual void log(LogLevel::Level level, LogEvent::ptr event) override;
+        virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
     };
 
     // 输出到文件
@@ -144,7 +148,7 @@ namespace cyberpolar
     public:
         using ptr = std::shared_ptr<FileLogAppender>;
         FileLogAppender(const std::string& filename);
-        virtual void log(LogLevel::Level level, LogEvent::ptr event) override;
+        virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
 
         bool reopen();
     private:
