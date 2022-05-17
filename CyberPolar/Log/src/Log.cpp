@@ -137,7 +137,7 @@ namespace cyberpolar
             return "INFO";
             break;
         case LogLevel::WARN:
-            return "INFO";
+            return "WARN";
             break;
         case LogLevel::ERROR:
             return "ERROR";
