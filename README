@@ -5,25 +5,26 @@ gcc 9.1 above
 cmake 3.15 above
 
 ## Directory
+3rdparty -- 第三方库文件夹
 bin   -- 二进制可执行文件
 build -- 中间文件路径
 cmake -- cmake函数文件夹
 lib   -- 库输出路径
-src   -- 源代码文件夹
-tests -- 测试代码路径
+CyberPolar   -- 源代码文件夹
+test -- 测试代码路径
 
 ## Logger(日志系统)
 1. 
-    Logger(定义日志类别)
+    Logger (定义日志类别)
       |
-      |----Formatter(日志格式)
+      |----Formatter (日志格式)
       |
-    Appender(日志输出地)
+    Appender (日志输出地)
 
-## Coroutine Fiber Library
+## Coroutine Fiber Library(协程库封装)
 
-## Socket Library
+## Socket Library(socket函数库)
 
-## Http Protocol
+## Http Protocol(http协议开发)
 
-## Distributed Protocol
+## Distributed Protocol(分布式协议)
