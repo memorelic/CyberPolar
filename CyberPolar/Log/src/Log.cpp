@@ -58,7 +58,7 @@ namespace cyberpolar
         }
     };
 
-     class StringFormatItem : public LogFormatter::FormatItem
+    class StringFormatItem : public LogFormatter::FormatItem
     {
     public:
         StringFormatItem(const std::string& str)
@@ -146,7 +146,6 @@ namespace cyberpolar
             return "FATAL";
             break;
         default:
-            return "UNKNOW";
             break;
         }
 
@@ -156,7 +155,7 @@ namespace cyberpolar
     Logger::Logger(const std::string& name)
     : m_name{name}
     {
-
+        
     }
 
     void Logger::addAppender(LogAppender::ptr appender)
