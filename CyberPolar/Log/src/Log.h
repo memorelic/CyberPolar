@@ -155,6 +155,20 @@ namespace cyberpolar
         std::string m_filename;
         std::ofstream m_filestream;
     };
+
+    class AllLogAppender : public LogAppender
+    {
+    public:
+        using ptr = std::shared_ptr<AllLogAppender>;
+        virtual void log(std::shared_ptr<Logger> logger, LogLevel::Level level, LogEvent::ptr event) override;
+        
+        void addAppender(const LogAppender& appender);
+        void delAppender(const LogAppender& appender);
+
+        // all log appender union set 
+    private:
+        std::vector<LogAppender> m_appenders;
+    };
 }
 
 #endif

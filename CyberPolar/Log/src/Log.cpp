@@ -236,10 +236,11 @@ namespace cyberpolar
 
         // current string
         std::string nstr;
+        const char pattern = '%';
 
         for (size_t i = 0; i < m_pattern.size(); i++)
         {   
-            if (m_pattern[i] == '%')
+            if (m_pattern[i] == pattern)
             {
                 nstr.append(1, m_pattern[i]);
                 continue;
@@ -247,12 +248,13 @@ namespace cyberpolar
 
             if ((i+1) < m_pattern.size())
             {
-                if (m_pattern[i + 1] == '%')
+                if (m_pattern[i + 1] == pattern)
                 {
-                    nstr.append(1, '%');
+                    nstr.append(1, pattern);
                     continue;
                 }
             }
+            
             size_t n = i + 1;
             int fmt_status = 0;
             size_t fmt_begin = 0;
@@ -273,7 +275,8 @@ namespace cyberpolar
                         str = m_pattern.substr(i + 1, n - i - 1);
                         fmt_status = 1; // 解析格式
                         fmt_begin = n;
-                        ++n;
+                        // ++n;
+                        n++;
                         continue;
                     }
                 }
@@ -367,6 +370,7 @@ namespace cyberpolar
             %d - 时间戳
             %f - 文件名
             %l - 行号
+            %% - (预留)
         */ 
     }
 
@@ -374,6 +378,8 @@ namespace cyberpolar
     {
         std::stringstream ss;
 
+        // Format all items
+        
         for (auto& i : m_items)
         {
             i->format(ss, logger, level, event);
@@ -422,8 +428,8 @@ namespace cyberpolar
         }
 
         m_filestream.open(m_filename);
-
+        
+        // 此处使用双感叹号，保证类型安全
         return !!m_filestream;
     }
 }
-        
